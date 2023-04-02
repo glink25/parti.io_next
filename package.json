@@ -1,0 +1,49 @@
+{
+  "name": "parti.io_next",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "NODE_ENV=develop tsx server --watch & vite client --host",
+    "build": "NODE_ENV=production esbuild server/index.ts --bundle --platform=node --target=node12 --outfile=dist/index.js & vite build client --emptyOutDir",
+    "build:jsbox": "NODE_ENV=production esbuild server/index.ts --bundle --platform=node --target=node12 --outfile=dist/index.js & vite build client --emptyOutDir && node build/jsbox.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@iconify-json/mdi": "^1.1.44",
+    "@types/koa": "^2.13.5",
+    "@types/koa-static": "^4.0.2",
+    "@types/lodash-es": "^4.17.7",
+    "@types/qrcode": "^1.5.0",
+    "@types/uuid": "^9.0.1",
+    "@vitejs/plugin-vue": "^4.0.0",
+    "effector": "*",
+    "esbuild": "^0.16.10",
+    "eslint": "^8.30.0",
+    "eslint-kit": "^6.10.0",
+    "sass": "^1.57.1",
+    "svelte": "^3.2.0",
+    "tsx": "^3.12.1",
+    "typescript": "^4.8.2",
+    "unocss": "^0.50.6",
+    "vite": "^4.0.3",
+    "vite-plugin-windicss": "^1.8.10"
+  },
+  "dependencies": {
+    "@unocss/reset": "^0.50.6",
+    "@vueuse/core": "^9.13.0",
+    "koa": "^2.14.1",
+    "koa-static": "^5.0.0",
+    "lodash-es": "^4.17.21",
+    "pinia": "^2.0.33",
+    "qrcode": "^1.5.1",
+    "socket.io": "^4.5.4",
+    "socket.io-client": "^4.5.4",
+    "uuid": "^9.0.0",
+    "vue": "^3.2.45",
+    "vue-router": "^4.1.6"
+  }
+}

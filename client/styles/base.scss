@@ -1,0 +1,131 @@
+@import '@unocss/reset/tailwind.css';
+
+* {
+  // 阻止移动端safari双击缩放
+  touch-action: manipulation;
+
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: rgba(158, 154, 154, 0.2);
+    border-radius: 4px;
+    transition: all 0.2s ease-in-out;
+  }
+
+  ::-webkit-scrollbar-track {
+    border-radius: 4px;
+  }
+}
+
+html {
+  overflow: hidden;
+}
+
+body {
+  width: 100vw;
+  height: var(--actVh);
+  -webkit-tap-highlight-color: transparent;
+}
+
+#app {
+  width: 100%;
+  height: 100%;
+}
+
+.place-center {
+  @apply items-center justify-center
+}
+
+.vibrant {
+  @apply transform transition-all x: () hover:(scale-[1.01]) active:(scale-[0.99] opacity-[0.9])
+}
+
+// transitions
+.fade-move,
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.2s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.slide-left {
+
+  &-move,
+  &-enter-active,
+  &-leave-active {
+    transition: all 0.2s ease-in-out;
+    position: absolute;
+  }
+
+  &-enter-from {
+    transform: translateX(-100px);
+    opacity: 0;
+    position: absolute;
+  }
+
+  &-leave-to {
+    transform: translateX(100px);
+    opacity: 0;
+    position: absolute;
+  }
+}
+
+.slide-right {
+
+  &-move,
+  &-enter-active,
+  &-leave-active {
+    transition: all 0.2s ease;
+    position: absolute;
+  }
+
+  &-enter-from {
+    transform: translateX(100px);
+    opacity: 0;
+    position: absolute;
+  }
+
+  &-leave-to {
+    transform: translateX(-100px);
+    opacity: 0;
+    position: absolute;
+  }
+}
+
+.slide-bottom-move,
+.slide-bottom-enter-active,
+.slide-bottom-leave-active {
+  transition: all 0.2s ease;
+}
+
+.slide-bottom-enter-from,
+.slide-bottom-leave-to {
+  bottom: -100vh;
+}
+
+.auto-fade-slide {
+
+  &-move,
+  &-enter-active,
+  &-leave-active {
+    transition: all 0.2s ease-in-out;
+
+    .anchor {
+      transition: all 0.2s ease-in-out;
+    }
+  }
+
+  &-enter-from,
+  &-leave-to {
+    .anchor {
+      @apply x: () <md:(bottom-[-100vh]) md:(opacity-0)
+    }
+  }
+}

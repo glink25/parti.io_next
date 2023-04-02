@@ -1,0 +1,29 @@
+{
+    "compilerOptions": {
+        "module": "ESNext",
+        "moduleResolution": "Node",
+        "paths": {
+            "shared/*": [
+                "./shared/*"
+            ],
+            "client/*": [
+                "./client/*"
+            ],
+            "server/*": [
+                "./server/*"
+            ]
+        },
+        "esModuleInterop": true,
+        "lib": [
+            "esnext",
+            "dom",
+        ],
+        "strictNullChecks": true,
+        "target": "ESNext",
+    },
+    "include": [
+        "shared",
+        "client",
+        "server"
+    ],
+}
