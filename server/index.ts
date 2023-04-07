@@ -11,7 +11,7 @@ const isDevelop = process.env.NODE_ENV === 'develop';
 const hostIp = getIPAddress();
 
 const app = new Koa();
-const staticServe = KoaStatic(resolve(__dirname, './client'));
+
 const httpServer = createServer(app.callback());
 const LOCAL_URL = `http://localhost:${PORT}`
 const HOST_URL = `http://${hostIp}:${PORT}`
@@ -23,10 +23,11 @@ const io = new Server(httpServer, {
 });
 
 if (!isDevelop) {
+  const staticServe = KoaStatic(resolve(__dirname, './'));
   app.use(staticServe);
   console.log('app running at:');
-  console.log(LOCAL_URL);
-  console.log(HOST_URL);
+  console.log(`${LOCAL_URL}/client/index.html`);
+  console.log(`${HOST_URL}/client/index.html`);
 }
 
 httpServer.listen(isDevelop ? DEV_SOCKET_PORT : PORT, '0.0.0.0');

@@ -1,5 +1,5 @@
 <template>
-  <Frame :style="{ background: `url(${gameInfo?.cover})`, backgroundSize: 'cover' }">
+  <Frame :style="{ background: gameInfo?.cover ? `url(${gameInfo?.cover})` : undefined, backgroundSize: 'cover' }">
     <div class="p-2 flex items-center justify-between">
       <div
         class="bg-stone-100 w-8 h-8 flex items-center justify-center rounded-full cursor-pointer flex flex-col justify-center shdaow"
@@ -7,7 +7,7 @@
         <div class="w-5 h-5 bg-stone-500 icon i-mdi:arrow-left"></div>
       </div>
       <div class="font-bold text-lg text-white text-shadow-lg">
-        {{ roomInfo?.type ? GameConfig[roomInfo.type].title : '' }}
+        {{ gameInfo?.title }}
       </div>
       <div
         class="bg-stone-100 w-8 h-8 flex items-center justify-center rounded-full cursor-pointer flex flex-col justify-center shadow"
@@ -56,7 +56,6 @@
 import AvatarIcon from 'client/components/AvatarIcon.vue';
 import { ConfirmSlotInjector, showConfirm } from 'client/components/confirm';
 import Frame from 'client/components/Frame.vue';
-import { GameConfig } from "client/games/config";
 import { useSocketStore } from 'client/hooks/socket';
 import { createQrCodeOnCanvas } from 'client/utils/qrcode';
 import { computed, ref, nextTick } from 'vue';
@@ -64,7 +63,7 @@ import { urlHandler } from 'client/router';
 
 const roomInfo = computed(() => useSocketStore().state.roomInfo)
 const userInfo = computed(() => useSocketStore().state.userInfo)
-const gameInfo = computed(() => roomInfo.value?.type ? GameConfig[roomInfo.value?.type] : undefined)
+const gameInfo = computed(() => roomInfo.value?.type ? useSocketStore().state.globalInfo.games.find(g => g.type === roomInfo.value?.type) : undefined)
 
 
 const isCreator = computed(() => roomInfo.value?.joiners.some(joiner => joiner.admin && joiner.uuid === userInfo.value.uuid))
@@ -89,7 +88,8 @@ const shareRoom = async () => {
   showConfirm({ injector: qrcodeSlot.value, modalClose: true, customContentClass: 'qrcode-content' })
   await nextTick()
   const url = useSocketStore().state.globalInfo.hostURL
-  createQrCodeOnCanvas(urlHandler.createURL({ roomId: roomInfo.value?.id }, url), qrcodeEl.value!, { width: 200 })
+  console.log(urlHandler.createURL({ roomId: roomInfo.value?.id }, `${url}/client/index.html`))
+  createQrCodeOnCanvas(urlHandler.createURL({ roomId: roomInfo.value?.id }, `${url}/client/index.html`), qrcodeEl.value!, { width: 200 })
 }
 
 </script>

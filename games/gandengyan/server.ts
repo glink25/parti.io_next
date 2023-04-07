@@ -1,8 +1,8 @@
 import { GameNext } from "shared/config";
-import { Gandengyan, GandengyanEvent, GandengyanGameInfo } from "shared/games/gandengyan";
-import { Game } from "./game";
+import { Game } from "server/game";
+import { GandengyanGameInfo, Gandengyan, GandengyanEvent } from "./gandengyan";
 
-export class GandengyanGame extends Game<GandengyanGameInfo>{
+export default class GandengyanGame extends Game<GandengyanGameInfo>{
     static limitation = {
         max: 8,
         min: 2,

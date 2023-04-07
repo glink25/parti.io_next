@@ -1,0 +1,6 @@
+{
+    "server": "server.ts",
+    "index": "index.html",
+    "title": "Gandengyan",
+    "cover": "cover.png"
+}

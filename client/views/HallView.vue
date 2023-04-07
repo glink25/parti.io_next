@@ -13,7 +13,7 @@
         <div v-for="room in globalInfo?.rooms ?? []"
           class="my-4 p-4 rounded-2xl bg-blue text-white text-center font-xl font-bold vibrant"
           :class="{ '!bg-gray pointer-events-none': !room.available }" @click="room.available && joinRoom(room.id)">
-          <div>{{ GameConfig[room.type].title }}</div>
+          <div>{{ globalInfo.games.find(g => g.type === room.type)?.title }}</div>
           <div>{{ room.available }}</div>
         </div>
       </div>
@@ -34,8 +34,6 @@ import { computed, ref } from 'vue';
 import Avatar from 'client/components/Avatar.vue';
 import { useSocketStore } from 'client/hooks/socket';
 import Frame from 'client/components/Frame.vue';
-import { GameConfig } from 'client/games/config';
-import { ConfirmSlotInjector, showConfirm } from 'client/components/confirm';
 
 const userInfo = computed(() => useSocketStore().state.userInfo)
 const globalInfo = computed(() => useSocketStore().state.globalInfo)

@@ -4,9 +4,10 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "NODE_ENV=develop tsx server --watch & vite client --host",
-    "build": "NODE_ENV=production esbuild server/index.ts --bundle --platform=node --target=node12 --outfile=dist/index.js & vite build client --emptyOutDir",
-    "build:jsbox": "NODE_ENV=production esbuild server/index.ts --bundle --platform=node --target=node12 --outfile=dist/index.js & vite build client --emptyOutDir && node build/jsbox.js",
+    "dev": "NODE_ENV=develop tsx server/index.ts & vite --host",
+    "dev:debug": "NODE_ENV=develop DEBUG=socket* tsx server/index.ts & vite --host",
+    "build": "NODE_ENV=production vite build --emptyOutDir && esbuild server/index.ts --bundle --platform=node --target=node12 --outfile=dist/index.js",
+    "build:jsbox": "npm run build && node build/jsbox.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

@@ -1,5 +1,4 @@
 import { useSocketStore } from 'client/hooks/socket';
-import { GameConfig } from 'client/games/config';
 import {
   type RouteRecordRaw,
   createRouter,
@@ -19,7 +18,6 @@ const routes: RouteRecordRaw[] = [
     },
     beforeEnter: (to, from, next) => {
       urlHandler.checkURL(location.href, (params) => {
-        console.log('params', params)
         if (params.roomId !== undefined) {
           useSocketStore().socket.emit('room:join', params.roomId)
           clearLocationParams()
@@ -48,7 +46,8 @@ const routes: RouteRecordRaw[] = [
     component: () => import('client/views/GameView.vue'),
     beforeEnter: (to) => {
       const gameType = to.params.gameType as string
-      return GameConfig[gameType] && Boolean(useSocketStore().state.roomInfo?.gameInfo)
+      const game = useSocketStore().state.globalInfo.games.find((g) => g.type === gameType)
+      return Boolean(game) && Boolean(useSocketStore().state.roomInfo?.gameInfo)
     },
     meta: {
       order: 2,

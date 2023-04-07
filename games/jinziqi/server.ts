@@ -1,10 +1,10 @@
 import { GameNext } from "shared/config";
-import { assignPiece, JinziqiBoard, JinziqiEvent, JinziqiGameInfo, Piece } from "shared/games/jinziqi";
-import { Game } from "./game";
+import { Game } from "server/game";
+import { JinziqiGameInfo, JinziqiBoard, JinziqiEvent, assignPiece, Piece } from "./jinziqi";
 
 
 
-export class JinziqiGame extends Game<JinziqiGameInfo> {
+export default class JinziqiGame extends Game<JinziqiGameInfo> {
 
     static limitation = {
         max: 2,

@@ -3,6 +3,7 @@ import { UserManager } from "./user";
 import { RoomManager } from "./room";
 import { ClientEmitMap, ClientListenerMap, PartiClientState } from "shared/type";
 import { batch } from "shared/batch";
+import { getGameConfig } from "./config";
 
 export const startParti = (io: Server<ClientEmitMap, ClientListenerMap>, hostURL: string) => {
     const userManager = new UserManager()
@@ -12,6 +13,10 @@ export const startParti = (io: Server<ClientEmitMap, ClientListenerMap>, hostURL
     const emitToAll = batch<PartiClientState>((data) => {
         io.emit('patch', data)
     })
+    const updateGamesState = async () => {
+        const games = await getGameConfig()
+        emitToAll({ globalInfo: { games: games } })
+    }
     const updateAllState = () => {
         emitToAll({ globalInfo: { ...userManager.info, rooms: roomManager.info, hostURL } })
     }
@@ -59,6 +64,7 @@ export const startParti = (io: Server<ClientEmitMap, ClientListenerMap>, hostURL
             updateRoomState()
         }
         onChange()
+        updateGamesState()
 
         const stopListenUser = userManager.onChange(onChange)
 

@@ -11,6 +11,9 @@
             ],
             "server/*": [
                 "./server/*"
+            ],
+            "games/*": [
+                "./games/*"
             ]
         },
         "esModuleInterop": true,
@@ -24,6 +27,8 @@
     "include": [
         "shared",
         "client",
-        "server"
+        "server",
+        "games",
+        "vite.config.ts"
     ],
 }

@@ -1,23 +1,21 @@
 import { Games as GameTypes, GAME_TYPES } from "shared/config";
 import type { Component } from "vue";
-import GandengyanCover from "./gandengyan/cover.png?url";
-import JInziqiCover from "./jinziqi/cover.png";
 
-console.log(GandengyanCover)
 export type GameInfo = {
-    cover: string,
+    html: string,
     title: string,
     gameComponent: () => Promise<Component>
 }
 
 export const GameConfig: Record<GameTypes, GameInfo> = {
     'jinziqi': {
-        cover: JInziqiCover,
+        html: `<div>❌</div>
+        <div>⭕</div>`,
         title: 'Tic-Tac-Toe',
         gameComponent: () => import("client/games/jinziqi/Jinziqi.vue")
     },
     'gandengyan': {
-        cover: GandengyanCover,
+        html: `<div>❌👀</div>`,
         title: 'Gandengyan',
         gameComponent: () => import("client/games/gandengyan/Gandengyan.vue")
     }

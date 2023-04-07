@@ -4,7 +4,7 @@ const path = require('path')
 const JSBOX_CODE = `
 // JSBOX_CODE_START
 const safari = require("safari")
-safari.open(LOCAL_URL)
+safari.open(\`\${LOCAL_URL}/client/index.html\`)
 // JSBOX_CODE_END
 `;
 const indexPath = path.resolve(__dirname, '../dist/index.js');

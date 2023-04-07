@@ -1,9 +1,17 @@
-import { Games } from "./config";
+// import { Games } from "./config";
 
 export type User = {
   name: string;
   uuid: string;
 };
+
+export type GameConfig = {
+  server: string,
+  index: string,
+  cover: string,
+  title: string,
+  type: string
+}
 
 export type DeepPartial<T> = T extends object ? { [k in keyof T]?: T[k] extends object ? DeepPartial<T[k]> : T[k] } : T
 
@@ -13,15 +21,16 @@ export type GlobalInfo = {
   rooms: {
     id: string;
     available: boolean;
-    type: Games
+    type: string
   }[],
-  hostURL: string
+  hostURL: string,
+  games: GameConfig[]
 }
 export type RoomInfo = {
   joiners: (User & { ready: boolean, online: boolean, admin: boolean })[]
   gameInfo?: any;
   id: string;
-  type: Games;
+  type: string;
   ready: boolean
 }
 
@@ -37,7 +46,7 @@ export type ClientListenerMap = {
 }
 export type ClientEmitMap = {
   'user:change-name': (name: string) => void
-  'room:create': (gameType: Games) => void
+  'room:create': (gameType: string) => void
   'room:join': (roomId: string) => void
   'room:leave': () => void
   'room:kick-out': (roomId: string) => void

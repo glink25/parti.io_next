@@ -16,11 +16,11 @@
                     <div class="text-lg font-bold text-center">Choose a Game</div>
                     <div class="flex-1 w-full overflow-y-auto pt-10 flex justify-center">
                         <div class="grid grid-cols-4 place-items-center w-[fit-content] h-[fit-content]">
-                            <div v-for="(game, index) in Games" :key="index"
+                            <div v-for="(game, index) in games" :key="index"
                                 class="w-40 h-40 bg-gray rounded-lg overflow-hidden shadow vibrant m-2 col-span-2 row-span-2 relative flex justify-center game-item"
                                 @click="createRoom(game)">
                                 <div class="absolute top-0 w-full h-full z--1"
-                                    :style="{ background: `url(${game.cover})` }">
+                                    :style="{ background: `url(${getImageURL(game)})` }">
                                 </div>
                                 <div class="absolute bottom-2 font-bold text-lg text-white text-shadow-lg">{{ game.title }}
                                 </div>
@@ -33,11 +33,12 @@
     </Teleport>
 </template>
 <script lang="ts" setup>
-import { GameInfo, Games } from 'client/games/config';
 import { useSocketStore } from 'client/hooks/socket';
-import { Games as GameTypes } from 'shared/config';
-import { ref } from 'vue';
+import { GameConfig } from 'shared/type';
+import { computed, ref } from 'vue';
 const visible = ref(false)
+
+const games = computed(() => useSocketStore().state.globalInfo.games)
 
 const show = () => {
     visible.value = true
@@ -45,9 +46,11 @@ const show = () => {
 
 defineExpose({ show })
 
-const createRoom = (game: GameInfo & { type: GameTypes }) => {
+const createRoom = (game: GameConfig) => {
     useSocketStore().socket.emit('room:create', game.type)
 }
+
+const getImageURL = (game: GameConfig) => `${window.origin}${game.cover}`
 </script>
 <style lang="scss" scoped>
 .game-item:nth-child(1) {

@@ -24,5 +24,9 @@ export const createURLHandler = <Keys extends readonly string[]>(locationParamKe
 }
 
 export const clearLocationParams = () => {
-    window.history.pushState({}, '0', location.origin)
+    const href = new URL(location.href)
+    href.searchParams.forEach((_, key) => {
+        href.searchParams.delete(key)
+    })
+    window.history.pushState({}, '0', href.href)
 }

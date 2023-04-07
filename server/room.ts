@@ -1,9 +1,7 @@
-import { Games } from 'shared/config';
-import { ClientEmitMap, ClientListenerMap, RoomInfo, User } from 'shared/type';
-import { Server, Socket } from 'socket.io';
+import { GameConfig, RoomInfo } from 'shared/type';
 import { v1 } from 'uuid';
-import { GameConfig } from './games/config';
-import { Game } from './games/game';
+import { getGameConfig } from './config';
+import { Game } from './game';
 import { Notifier } from './notifier';
 import { ServerUser } from './user';
 
@@ -23,9 +21,10 @@ class Room extends Notifier<RoomInfo> {
 
     private readonly GameConstructor: typeof Game
     public readonly id = v1()
-    constructor(public readonly gameType: Games) {
+    constructor(public readonly gameConfig: GameConfig) {
         super()
-        this.GameConstructor = GameConfig[this.gameType] as any
+        const cur = require(gameConfig.server)
+        this.GameConstructor = cur.default
         if (this.GameConstructor === undefined) throw new Error("Game type not exist");
     }
 
@@ -49,11 +48,12 @@ class Room extends Notifier<RoomInfo> {
         // TODO: await all users to be loaded
         this.game = new this.GameConstructor({
             players: this.joiners.map(joiner => joiner.user),
-            onEnd: () => {
-                this.game?.clearAllListeners()
-                this.game = undefined
-                this.notify()
-            },
+
+        })
+        this.game.onEnd(() => {
+            this.game?.clearAllListeners()
+            this.game = undefined
+            this.notify()
         })
         this.game.onChange((info) => {
             this.notify(info ? { gameInfo: info } : undefined)
@@ -73,7 +73,7 @@ class Room extends Notifier<RoomInfo> {
         return {
             joiners: this.joiners.map((joiner, index) => ({ ...joiner.user, admin: index === 0, ready: joiner.ready })),
             gameInfo: this.game?.getPersonalInfo(uuid) ?? null,
-            type: this.gameType,
+            type: this.gameConfig.type,
             id: this.id,
             ready: this.ready
         }
@@ -84,14 +84,22 @@ export class RoomManager extends Notifier {
     public rooms: Room[] = []
 
     // @change
-    createRoom(type: Games, user: ServerUser) {
+    async createRoom(typeId: string, user: ServerUser) {
         if (this.rooms.some(room => room.find(user.uuid))) throw new Error("user already in one room");
-        const room = new Room(type)
-        this.rooms.push(room)
-        room.add(user)
-        room.onChange(() => { this.notify() })
-        this.notify()
-        return room
+        const games = await getGameConfig()
+        const game = games.find(g => g.type === typeId)
+        if (!game) throw new Error("game not exist");
+        try {
+            const room = new Room(game)
+            this.rooms.push(room)
+            room.add(user)
+            room.onChange(() => { this.notify() })
+            this.notify()
+            return room
+        } catch (error) {
+            throw error;
+
+        }
     }
 
     // @change
@@ -135,7 +143,7 @@ export class RoomManager extends Notifier {
     }
 
     get info() {
-        return this.rooms.map((room) => ({ id: room.id, available: room.available, type: room.gameType }))
+        return this.rooms.map((room) => ({ id: room.id, available: room.available, type: room.gameConfig.type }))
     }
 
     getPersonalInfo(uuid: string) {
